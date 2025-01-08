@@ -35,23 +35,23 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
-  http: ^0.13.6
-  web_socket_channel: ^2.4.0
+  http: ^1.2.2
+  web_socket_channel: ^3.0.1
   dart_extensions: ^2.2.2
   dio: ^5.2.1+1
-  uuid: ^3.0.7
+  uuid: ^4.5.1
   http_proxy: ^1.2.1
   url_launcher: ^6.1.11
   path_provider: ^2.0.15
   path: ^1.8.2
-  file_picker: ^5.3.1
+  file_picker: ^8.1.6
   shared_preferences: ^2.2.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   json_serializable: ^6.5.4
-  json5_model: ^1.0.1
+  json5_model: ^2.1.1
   build_runner: ^2.3.0
 
   # The "flutter_lints" package below contains a set of recommended lints to
@@ -59,7 +59,7 @@ dev_dependencies:
   # activated in the `analysis_options.yaml` file located at the root of your
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
-  flutter_lints: ^2.0.0
+  flutter_lints: ^5.0.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

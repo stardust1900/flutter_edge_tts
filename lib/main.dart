@@ -19,7 +19,7 @@ import 'package:web_socket_channel/io.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 import 'package:intl/intl.dart';
 import 'dart:io';
-
+import 'package:crypto/crypto.dart';
 import 'data/shared_preferences_helper.dart';
 
 extension Uint8ListExtension on Uint8List {
@@ -208,8 +208,35 @@ Path:ssml""",
     </voice>
 </speak>""");
 
+    double getUnixTimestamp() {
+      return DateTime.now().toUtc().microsecondsSinceEpoch / 1000000 + 0.0;
+    }
+
+    const int WIN_EPOCH = 11644473600;
+    const double S_TO_NS = 1e9;
+
+    const String chromiumFullVersion = "130.0.2849.68";
+    const String secMsGecVersion = "1-$chromiumFullVersion";
+
+    String generateSecMsGec() {
+      // Get the current timestamp in Unix format with clock skew correction
+      double ticks = getUnixTimestamp();
+      // Switch to Windows file time epoch (1601-01-01 00:00:00 UTC)
+      ticks += WIN_EPOCH;
+      // Round down to the nearest 5 minutes (300 seconds)
+      ticks = ticks - (ticks % 300);
+      // Convert the ticks to 100-nanosecond intervals (Windows file time format)
+      ticks *= S_TO_NS / 100;
+      // Create the string to hash by concatenating the ticks and the trusted client token
+      String strToHash = "${ticks.toInt()}6A5AA1D4EAFF4E9FB37E23D68491D6F4";
+      // Compute the SHA256 hash and return the uppercased hex digest
+      final bytes = utf8.encode(strToHash);
+      final digest = sha256.convert(bytes);
+      return digest.toString().toUpperCase();
+    }
+
     final webSocketUrl =
-        'wss://speech.platform.bing.com/consumer/speech/synthesize/readaloud/edge/v1?TrustedClientToken=6A5AA1D4EAFF4E9FB37E23D68491D6F4&ConnectionId=' +
+        'wss://speech.platform.bing.com/consumer/speech/synthesize/readaloud/edge/v1?TrustedClientToken=6A5AA1D4EAFF4E9FB37E23D68491D6F4&Sec-MS-GEC=${generateSecMsGec()}&Sec-MS-GEC-Version=$secMsGecVersion&ConnectionId=' +
             getGuid();
 
     final channel =
@@ -452,9 +479,7 @@ class _FileSelectorState extends State<FileSelector> {
           widget.onFileSelected(result); // 回调函数
         });
       }
-    } else {
-
-    }
+    } else {}
   }
 
   @override
